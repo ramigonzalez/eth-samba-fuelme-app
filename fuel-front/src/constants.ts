@@ -10,7 +10,7 @@ export const WALLET_SECRET =
 
 // Create a Wallet from given secretKey in this case
 // The one we configured at the chainConfig.json
-export const wallet = Wallet.fromPrivateKey(
-  WALLET_SECRET,
-  "http://localhost:4000/graphql"
-);
+// export const wallet = Wallet.fromPrivateKey(
+//   WALLET_SECRET,
+//   "http://localhost:4000/graphql"
+// );

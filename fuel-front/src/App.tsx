@@ -2,12 +2,14 @@ import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromEle
 import { Startup } from "./screens/Startup";
 import { useState, useEffect } from "react";
 import { useFuel } from "./hooks/useFuel";
+import { CONTRACT_ID } from "./constants";
+import { Wallet, WalletLocked } from "fuels";
+import { FuelMeAbi, FuelMeAbi__factory } from "./contracts";
 
 
 // Connects out Contract instance to the deployed contract
 // address using the given wallet.
 // ADD contract anywhere we need it
-// const contract = CounterContractAbi__factory.connect(CONTRACT_ID, wallet);
 const useIsConnected = () => {
   const [fuel] = useFuel();
   const [isConnected, setIsConnected] = useState(false);
@@ -28,12 +30,50 @@ const useIsConnected = () => {
     };
   }, [fuel]);
 
-  return [isConnected];
+  return isConnected;
 }
 
 const Layout = () => {
-  const globalWindow = typeof window !== "undefined" ? window : ({} as Window);
   const isConnected = useIsConnected();
+  const [fuel] = useFuel();
+  const [contract, setContract] = useState<FuelMeAbi>();
+  const [wallet, setWallet] = useState<WalletLocked>();
+  const [isRegistered, setIsRegistered] = useState(false);
+  useEffect(() => {
+    if (!isConnected) return
+    const getAccount = async () => {
+      const accounts = await fuel.accounts();
+      if (!accounts.length) return null
+      const provider = await fuel.getProvider();
+
+      const walletLocked = Wallet.fromAddress(accounts[0], provider);
+      setWallet(walletLocked);
+      return walletLocked;
+    }
+
+    getAccount().then(e => {
+      if (!e) return
+      const ct = FuelMeAbi__factory.connect(CONTRACT_ID, e);
+      setContract(ct)
+    })
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected])
+
+  useEffect(() => {
+    const checkRegistered = async () => {
+      console.log("here", !!wallet && !!contract)
+      if (!!wallet && !!contract) {
+        console.log("inside the if", wallet.address.toB256())
+        const { value } = await contract.functions.is_registered({ Address: { value: wallet.address.toB256() } }).call();
+        console.log(value)
+        return value
+      }
+    }
+    console.log("here")
+    checkRegistered().then(isRegistered => console.log(isRegistered))
+  }, [contract, wallet])
+
   return <>
     <div style={{
       height: 100,
@@ -43,7 +83,7 @@ const Layout = () => {
       padding: 40
     }}>
       <h4 className='poppins text-2xl' onClick={() => {
-        (globalWindow as any).fuel.connect();
+        fuel.connect();
       }}>
         {isConnected ? "Profile" : "Connect"}
       </h4>
