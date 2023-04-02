@@ -6,7 +6,7 @@ export const CONTRACT_ID =
 
 //the private key from createWallet.js
 export const WALLET_SECRET =
-  " 0xfa2a27e8ddaadc0e6e72030ffb734c28b918c1c1b68eaddefe4cd81a00be8458";
+  "0x8d83c3cc2e06e07dcefe9b34a9b9e64aea954de9ef3837173b6df24845392edc";
 
 // Create a Wallet from given secretKey in this case
 // The one we configured at the chainConfig.json

@@ -45,6 +45,7 @@ const Layout = () => {
       const accounts = await fuel.accounts();
       if (!accounts.length) return null
       const provider = await fuel.getProvider();
+      console.log("provider", provider)
 
       const walletLocked = Wallet.fromAddress(accounts[0], provider);
       setWallet(walletLocked);
@@ -63,7 +64,10 @@ const Layout = () => {
   useEffect(() => {
     const checkRegistered = async () => {
       console.log("here", !!wallet && !!contract)
+      
       if (!!wallet && !!contract) {
+        const balance = await wallet.getBalance();
+        console.log("hh", balance)
         console.log("inside the if", wallet.address.toB256())
         const { value } = await contract.functions.is_registered({ Address: { value: wallet.address.toB256() } }).call();
         console.log(value)

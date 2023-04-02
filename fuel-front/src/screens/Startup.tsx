@@ -9,7 +9,7 @@ const StartupList = (props: any) => {
       id: 1,
       name: "My awesome corporation",
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vestibulum augue eros, sit amet faucibus diam egestas sit amet. Mauris ligula arcu, rhoncus a cursus sed, porttitor vel felis. Aenean interdum ac risus sed pretium. Duis risus dui, lacinia non neque tempus, finibus consequat nunc. Aliquam erat volutpat. Nullam non finibus purus. Maecenas facilisis justo risus, eget pharetra ligula dignissim eget. Phasellus porta turpis lorem, eu rhoncus sapien ullamcorper eu. Morbi in ante tellus. Suspendisse vel est ac dolor bibendum sodales vitae eget felis. Vivamus a justo nisi. Mauris nec neque quis velit porta bibendum et volutpat nulla.      ",
-      imgSrc: "https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/FGHMFCBDIVHB3N6PSB7GNB53NM.png"
+      imgSrc: "https://aromatic-acai-5c1.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F87f2ecf5-aef7-44c8-a05e-9266c9669d5d%2F2d776a1bbf574c5fad8482afd174efde.png?id=c9bd21f5-b438-4acf-8800-2fee616395f6&table=block&spaceId=b786dbf2-7ea6-4527-a9c6-0c3126f3c670&width=2000&userId=&cache=v2"
     }, {
       id: 2,
       name: "My awesome corporation",
