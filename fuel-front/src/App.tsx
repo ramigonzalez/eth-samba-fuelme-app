@@ -1,17 +1,39 @@
 import { Outlet, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom";
 import { Startup } from "./screens/Startup";
+import { useState, useEffect } from "react";
+import { useFuel } from "./hooks/useFuel";
 
 
 // Connects out Contract instance to the deployed contract
 // address using the given wallet.
 // ADD contract anywhere we need it
 // const contract = CounterContractAbi__factory.connect(CONTRACT_ID, wallet);
+const useIsConnected = () => {
+  const [fuel] = useFuel();
+  const [isConnected, setIsConnected] = useState(false);
 
-const useRegister = () => {
-  return { hasRegistered: true }
+  useEffect(() => {
+    async function handleConnection() {
+      const isConnected = await fuel.isConnected();
+      setIsConnected(isConnected);
+    }
+
+    if (fuel) {
+      handleConnection();
+    }
+
+    fuel?.on(fuel.events.connection, handleConnection);
+    return () => {
+      fuel?.off(fuel.events.connection, handleConnection);
+    };
+  }, [fuel]);
+
+  return [isConnected];
 }
 
 const Layout = () => {
+  const globalWindow = typeof window !== "undefined" ? window : ({} as Window);
+  const isConnected = useIsConnected();
   return <>
     <div style={{
       height: 100,
@@ -20,8 +42,10 @@ const Layout = () => {
       justifyContent: "flex-end",
       padding: 40
     }}>
-      <h4 className='poppins text-2xl'>
-        Register / Connect
+      <h4 className='poppins text-2xl' onClick={() => {
+        (globalWindow as any).fuel.connect();
+      }}>
+        {isConnected ? "Profile" : "Connect"}
       </h4>
     </div>
     <Outlet />
@@ -29,8 +53,6 @@ const Layout = () => {
 }
 
 function App() {
-
-  const { hasRegistered } = useRegister();
   // EXAMPLE HOW TO CALL Functions
   // const [counter, setCounter] = useState(0);
   // const [loading, setLoading] = useState(false);
