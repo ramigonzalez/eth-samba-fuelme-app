@@ -1,6 +1,6 @@
 import { Button } from "../components/Button"
 import { BrutalCard } from "../components/Card"
-const StartupList = () => {
+const StartupList = ({ isST }: { isST?: boolean }) => {
   const startups = [
     {
       name: "My awesome corporation",
@@ -77,8 +77,11 @@ const StartupList = () => {
         display: "grid",
         placeItems: "center"
       }}>
-
-        <Button onClick={() => backStartup(startup.id)} text="Me gusta" />
+        {isST ? <h4 className='poppins text-xl'>
+          100Eth
+        </h4> :
+          <Button onClick={() => backStartup(startup.id)} text="FuelMe" />
+        }
       </div>
     </div>
   </BrutalCard>)}
@@ -98,7 +101,7 @@ export const Startup = () => {
           <h4 className='poppins text-2xl'>
             Founded startups
           </h4>
-          <StartupList />
+          <StartupList isST />
         </BrutalCard>
       </div>
       <div>
