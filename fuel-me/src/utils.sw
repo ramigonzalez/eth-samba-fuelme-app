@@ -1,7 +1,7 @@
 library utils;
 
 dep data_structures;
-use data_structures::{ProfileType, ProfileInfo};
+use data_structures::{ProfileType, ProfileInfo, Campain};
 
 pub fn get_profile_type(_profileType: u64) -> Option<ProfileType> {
   match _profileType {
@@ -11,23 +11,23 @@ pub fn get_profile_type(_profileType: u64) -> Option<ProfileType> {
   }
 }
 
-impl core::ops::Eq for Option<ProfileType> {
-    fn eq(self, other: Self) -> bool {
-        match (self, other) {
-            (Option::Some(ProfileType::Startup), Option::Some(ProfileType::Startup)) => true,
-            (Option::Some(ProfileType::Investor), Option::Some(ProfileType::Investor)) => true,
-            (Option::None, Option::None) => true,  
-            _ => false,
-        }
-    }
-}
+// impl core::ops::Eq for Option<ProfileType> {
+//     fn eq(self, other: Self) -> bool {
+//         match (self, other) {
+//             (Option::Some(ProfileType::Startup), Option::Some(ProfileType::Startup)) => true,
+//             (Option::Some(ProfileType::Investor), Option::Some(ProfileType::Investor)) => true,
+//             (Option::None, Option::None) => true,  
+//             _ => false,
+//         }
+//     }
+// }
 
-impl core::ops::Eq for Option<ProfileInfo> {
-    fn eq(self, other: Self) -> bool {
-        match (self, other) {
-            (Option::Some(ProfileInfo), Option::Some(ProfileInfo)) => true,
-            (Option::None, Option::None) => true,  
-            _ => false,
-        }
-    }
-}
+// impl core::ops::Eq for Option<ProfileInfo> {
+//     fn eq(self, other: Self) -> bool {
+//         match (self, other) {
+//             (Option::Some(ProfileInfo), Option::Some(ProfileInfo)) => true,
+//             (Option::None, Option::None) => true,  
+//             _ => false,
+//         }
+//     }
+// }

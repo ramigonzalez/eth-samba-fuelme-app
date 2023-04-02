@@ -1,7 +1,7 @@
 library interface;
 
 dep data_structures;
-use data_structures::{ProfileType, ProfileInfo};
+use data_structures::{ProfileType, ProfileInfo, Campain};
 
 
 abi Funding {
@@ -56,51 +56,53 @@ abi Funding {
     #[payable, storage(read, write)]
     fn send_funds(_startup: Identity);
 
-    // /// Send funds to an startup
-    // ///
-    // /// # Arguments
-    // ///
-    // /// * `_startup` - The startup what will be funded
-    // /// * `_amount` - The amount of tokens sent
-    // ///
-    // /// # Reverts
-    // ///
-    // /// * If the amount is less or equals zero
-    // /// * If the startup is the address of zero
-    // /// * If the signer is not an investor
-    // /// * If the investor balance is less than the desired amount to invest
-    // ///
-    // #[storage(read, write)]
-    // fn approve(_startup: Identity);
+    /// Send funds to an startup
+    ///
+    /// # Arguments
+    ///
+    /// * `_startup` - The startup what will be funded
+    /// * `_amount` - The amount of tokens sent
+    ///
+    /// # Reverts
+    ///
+    /// * If the amount is less or equals zero
+    /// * If the startup is the address of zero
+    /// * If the signer is not an investor
+    /// * If the investor balance is less than the desired amount to invest
+    ///
+    #[storage(write)]
+    fn approve(_startup: Identity);
 
-    // #[storage(read)]
-    // fn is_approved(_startup: Identity) -> bool;
+    /// Used for showing tags approved or not approved
+    #[storage(read)]
+    fn is_approved(_startup: Identity) -> bool;
 
-    // ///////////////////////////////////////////////
-    // ////  STARTUPS
-    // ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    ////  STARTUPS
+    ///////////////////////////////////////////////
 
-    // /// Sends the allocated funds an approved startup has on their funding balance
-    // ///
-    // /// # Reverts
-    // ///
-    // /// * If the signer is not registered
-    // /// * If the signer is not an startup
-    // /// * If the startup is not approved
-    // /// * If the startup is blacklisted  ==> (NOT FOR MVP)
-    // ///
-    // #[storage(read, write)]
-    // fn withdraw();
+    /// Sends the allocated funds an approved startup has on their funding balance
+    ///
+    /// # Reverts
+    ///
+    /// * If the signer is not registered
+    /// * If the signer is not an startup
+    /// * If the startup is not approved
+    /// * If the startup is blacklisted  ==> (NOT FOR MVP)
+    ///
+    #[storage(read)]
+    fn withdraw();
 
-    // /// Creates an startup campain
-    // ///
-    // /// # Reverts
-    // ///
-    // /// * If the signer is not registered
-    // /// * If the signer is not an startup
-    // /// * If the startup is blacklisted  ==> (NOT FOR MVP)
-    // ///
-    // #[storage(read, write)]
-    // fn createCampain(_name: str[255], _description: str[255], _amount: u64);
+    /// Creates an startup campain
+    ///
+    /// # Reverts
+    ///
+    /// * If the signer is not registered
+    /// * If the signer is not an startup
+    /// * If the startup already have an active campain
+    /// * If the startup is blacklisted  ==> (NOT FOR MVP)
+    ///
+    #[storage(read, write)]
+    fn create_campain(_name: str[255], _description: str[255], _amount: u64);
 
 }

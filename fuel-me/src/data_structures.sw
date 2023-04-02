@@ -14,10 +14,6 @@ impl core::ops::Eq for ProfileType {
             _ => false,
         }
     }
-
-    // fn neq(self, other: Self) -> bool {
-    //     !self.eq(other)
-    // }
 }
 
 pub struct ProfileInfo {
@@ -28,24 +24,23 @@ pub struct ProfileInfo {
 }
 
 
-impl core::ops::Eq for Option<ProfileInfo> {
-    fn eq(self, other: Self) -> bool {
-        match (self, other) {
-            (Option::Some(ProfileInfo), Option::Some(ProfileInfo)) => true,
-            (Option::None, Option::None) => true,  
-            _ => false,
-        }
-    }
-}
+// impl core::ops::Eq for Option<ProfileInfo> {
+//     fn eq(self, other: Self) -> bool {
+//         match (self, other) {
+//             (Option::Some(ProfileInfo), Option::Some(ProfileInfo)) => true,
+//             (Option::None, Option::None) => true,  
+//             _ => false,
+//         }
+//     }
+// }
 
-impl core::ops::Eq for ProfileInfo {
-    fn eq(self, other: Self) -> bool {
-        match (self, other) {
-            (ProfileInfo, ProfileInfo) => true,
-            _ => false,
-        }
-    }
-}
+// impl core::ops::Eq for ProfileInfo {
+//     fn eq(self, other: Self) -> bool {
+//         match (self, other) {
+//             (ProfileInfo, ProfileInfo) => true,
+//         }
+//     }
+// }
 
 impl ProfileInfo {
     pub fn new(name: str[255], description: str[255], url: str[255], profileType: ProfileType) -> Self {
@@ -57,6 +52,10 @@ pub struct Campain {
     name: str[255],
     description: str[255],
     amount: u64,
-    /// The timestamp at which the campain ends
-    end_date: u64
+}
+
+impl Campain {
+    pub fn new(name: str[255], description: str[255], amount: u64) -> Self {
+        Self { name, description, amount }
+    }
 }
