@@ -1,0 +1,7 @@
+[project]
+authors = ["Rgonzalez"]
+entry = "main.sw"
+license = "Apache-2.0"
+name = "fuel-me"
+
+[dependencies]
