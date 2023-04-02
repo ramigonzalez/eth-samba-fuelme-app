@@ -11,11 +11,9 @@ pub enum RegistrationValidityError {
 
 pub enum ProfileError {
     NonExistantProfile: (),
-    InvalidProfileType: ()
-}
-
-pub enum InvestorError {
-    InsufficientBalance: (),
+    InvalidProfileType: (),
+    ExpectApprovalStartup: (),
+    ExpectNonActiveCampain: (),
 }
 
 pub enum AssetError {

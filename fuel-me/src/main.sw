@@ -5,8 +5,8 @@ dep data_structures;
 dep interface;
 dep utils;
 
-use errors::{InputError, RegistrationValidityError, ProfileError, InvestorError, AssetError};
-use data_structures::{ProfileType, ProfileInfo};
+use errors::{InputError, RegistrationValidityError, ProfileError, AssetError};
+use data_structures::{ProfileType, ProfileInfo, Campain};
 use interface::Funding;
 use utils::{ get_profile_type };
 
@@ -25,23 +25,21 @@ use std::{
     token::{
         transfer
     }
-    // logging::log,
 };
-
-// TODO: here will be ETH contract id
-// const BASIC_ASSET_ID = ContractId::from(ASSET_B256);
 
 storage {
     profiles: StorageMap<Identity, Option<ProfileInfo>> = StorageMap {},
     totalFundsRaisedByStartup: StorageMap<Identity, u64> = StorageMap {},
     fundsByStartupAndInvestor: StorageMap<(Identity, Identity), u64> = StorageMap {},
+    approvedStartups: StorageMap<Identity, bool> = StorageMap {},
+    startupCampains: StorageMap<Identity, Option<Campain>> = StorageMap {},
 }
 
 impl Funding for Contract {
     #[storage(read, write)]
     fn register_profile(_name: str[255], _description: str[255], _profileUrl: str[255], _profileType: u64) {
         let profileType = get_profile_type(_profileType);
-        require(!(profileType == Option::None), ProfileError::InvalidProfileType);
+        require(profileType.is_some(), ProfileError::InvalidProfileType);
         require(!storage.profiles.get(msg_sender().unwrap()).unwrap().is_some(), RegistrationValidityError::ExistantProfile);
         storage.profiles.insert(msg_sender().unwrap(), Option::Some(ProfileInfo::new(_name, _description, _profileUrl, profileType.unwrap())));
     }
@@ -67,8 +65,6 @@ impl Funding for Contract {
         
         let sender = msg_sender().unwrap();
 
-        // balance_of ??
-        // require(balance_of(sender) >= amount, InvestorError::InsufficientBalance);
         require(msg_asset_id() == BASE_ASSET_ID, AssetError::InvalidAssetId); // this could brake also
 
         let totalAmountFunded = storage.totalFundsRaisedByStartup.get(_startup).unwrap();
@@ -81,9 +77,37 @@ impl Funding for Contract {
     }
 
 
-    // #[storage(read, write)]
-    // fn withdraw() {
+    #[storage(write)]
+    fn approve(_startup: Identity) {
+        storage.approvedStartups.insert(_startup, true);
+    }
 
-    //     transfer(amount, BASIC_ASSET_ID, sender);
-    // }
+    #[storage(read)]
+    fn is_approved(_startup: Identity) -> bool {
+        storage.approvedStartups.get(_startup).is_some()
+    }
+
+    #[storage(read)]
+    fn withdraw() {
+        let sender = msg_sender().unwrap();
+        require(storage.approvedStartups.get(sender).unwrap(), ProfileError::ExpectApprovalStartup);
+        
+        let profile = storage.profiles.get(sender); 
+        require(profile.unwrap().is_some(), ProfileError::NonExistantProfile);
+        require(profile.unwrap().unwrap().profileType == ProfileType::Startup, ProfileError::InvalidProfileType);
+
+        let totalAmount = storage.totalFundsRaisedByStartup.get(sender).unwrap();
+        transfer(totalAmount, BASE_ASSET_ID, sender);
+    }
+
+    #[storage(read, write)]
+    fn create_campain(_name: str[255], _description: str[255], _amount: u64) {
+        require(_amount > 0, InputError::ExpectedNonZeroAmount);
+        let sender = msg_sender().unwrap();
+        let profile = storage.profiles.get(sender); 
+        require(profile.unwrap().is_some(), ProfileError::NonExistantProfile);
+        require(profile.unwrap().unwrap().profileType == ProfileType::Startup, ProfileError::InvalidProfileType);
+        require(!storage.startupCampains.get(sender).is_some(), ProfileError::ExpectNonActiveCampain);
+        storage.startupCampains.insert(sender, Option::Some(Campain::new(_name, _description, _amount)));
+    }
 }
