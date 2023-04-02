@@ -64,7 +64,7 @@ const Layout = () => {
   useEffect(() => {
     const checkRegistered = async () => {
       console.log("here", !!wallet && !!contract)
-      
+
       if (!!wallet && !!contract) {
         const balance = await wallet.getBalance();
         console.log("hh", balance)
@@ -86,10 +86,19 @@ const Layout = () => {
       justifyContent: "flex-end",
       padding: 40
     }}>
-      <h4 className='poppins text-2xl' onClick={() => {
-        fuel.connect();
+      <h4 className='poppins text-2xl' onClick={async () => {
+        if (!isConnected)
+          await fuel.connect();
+        else if (contract)
+          await contract.functions.register_profile("name", "description", "https://aromatic-acai-5c1.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F326fecf7-df68-47d6-b0d1-f7114c251bb7%2F6eae44b041b041a682b5121116c1bde0.png?id=5a2cdf27-c5d7-4570-816a-f47e063d505b&table=block&spaceId=b786dbf2-7ea6-4527-a9c6-0c3126f3c670&width=2000&userId=&cache=v2", 1).call();
+
       }}>
-        {isConnected ? "Profile" : "Connect"}
+        {isConnected ? "Profile " : "Connect"}
+      </h4>
+      <h4 className='poppins text-2xl' onClick={() => {
+        fuel.disconnect();
+      }}>
+        {isConnected && "Disconnect"}
       </h4>
     </div>
     <Outlet />
@@ -97,36 +106,7 @@ const Layout = () => {
 }
 
 function App() {
-  // EXAMPLE HOW TO CALL Functions
-  // const [counter, setCounter] = useState(0);
-  // const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   async function main() {
-  //     // Executes the counter function to query the current contract state
-  //     // the `.get()` is read-only, because of this it don't expand coins.
-  //     const { value } = await contract.functions.count().get();
-  //     setCounter(Number(value));
-  //   }
-  //   main();
-  // }, []);
-
-  // async function increment() {
-  //   // a loading state
-  //   setLoading(true);
-  //   // Creates a transactions to call the increment function
-  //   // because it creates a TX and updates the contract state this requires the wallet to have enough coins to cover the costs and also to sign the Transaction
-  //   try {
-  //     await contract.functions.increment().txParams({ gasPrice: 1 }).call();
-  //     const { value } = await contract.functions.count().get();
-  //     setCounter(Number(value));
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
-
-
-  // </Router >
   let router = createBrowserRouter(
     createRoutesFromElements(
       <>
